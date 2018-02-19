@@ -14,4 +14,7 @@ All usual mpv keyboard shortcuts still work, e.g.:
 * `m` to mute
 * …
 
-Additionaly, you can press `a` to add a new item to the playlist.
+Additionaly, you can press `a` to add a new item to the playlist or `c` for more playlist editing commands:
+
+* `r NUMBER` to remove item at position NUMBER
+* `m FROM TO` to move an item (WIP, this seems to behave pretty odd)
