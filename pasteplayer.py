@@ -18,7 +18,7 @@ def print_playlist():
             item.get('filename')
         ))
 
-def prompt(player, text, callback):
+def prompt(text, callback):
     player.terminal = False
     res = input("\n" + text + " >")
     callback(res)
@@ -67,11 +67,11 @@ if __name__ == '__main__':
         def cb(url):
             if url != "":
                 player.playlist_append(url)
-        prompt(player, "Enter URL", cb)
+        prompt("Enter URL", cb)
 
     @player.on_key_press('c')
     def ask_command():
-        prompt(player, "Enter command (or 'h' for help)", handle_command)
+        prompt("Enter command (or 'h' for help)", handle_command)
 
     @player.property_observer('playlist-pos')
     def position_observer(_name, value):
