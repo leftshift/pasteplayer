@@ -26,7 +26,9 @@ def prompt(text, callback):
     player.terminal = True
     
 def handle_command(command):
+    """Crude command parser"""
     def base(text):
+        """Base parser dispatching to subparsers for each command"""
         if text.strip() == "h":
             print(HELP_COMMANDS)
         if text.startswith("m "):
@@ -64,6 +66,7 @@ if __name__ == '__main__':
     
     @player.on_key_press('a')
     def ask_url():
+        """Ask for filename/URL to append to the playlist"""
         def cb(url):
             if url != "":
                 player.playlist_append(url)
@@ -71,10 +74,12 @@ if __name__ == '__main__':
 
     @player.on_key_press('c')
     def ask_command():
+        """Open playlist editing command prompt"""
         prompt("Enter command (or 'h' for help)", handle_command)
 
     @player.property_observer('playlist-pos')
     def position_observer(_name, value):
+        """Print playlist when current title changes"""
         print_playlist()
 
     ask_url()
