@@ -49,7 +49,8 @@ def handle_command(command):
         if len(args) == 2:
             f, t = args
             try:
-                player.playlist_move(int(f)-1, int(t)-1)
+                # I don't quite get this yet, but for some reason, f seems to be indexed at 0 while t is at 1
+                player.playlist_move(int(f)-1, int(t))
             except:
                 print("please enter valid indices")
         else:
