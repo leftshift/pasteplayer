@@ -56,7 +56,6 @@ def handle_command(command):
         else:
             print("please enter index and destination")
 
-
     base(command)
 
 if __name__ == '__main__':
@@ -71,7 +70,7 @@ if __name__ == '__main__':
         def cb(url):
             if url != "":
                 player.playlist_append(url)
-        prompt("Enter URL", cb)
+        prompt("Enter URL or file name", cb)
 
     @player.on_key_press('c')
     def ask_command():
