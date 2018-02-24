@@ -2,6 +2,8 @@
 
 Pasteplayer is a (very) thin python wrapper around mpv to allow easy on-the-fly playlist editing (like pasting youtube URLs)
 
+It's also available on pypi! Simply run `pip install pasteplayer`; after that, run the `pasteplayer` command from anywhere.
+
 ## Usage
 
 Upon startup, you will be asked for a valid URL or file name.
