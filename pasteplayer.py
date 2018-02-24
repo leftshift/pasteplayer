@@ -59,7 +59,7 @@ def handle_command(command):
 
     base(command)
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description='simple queue player for mpv')
 
     parser.add_argument('files', metavar="url/paths", default=None, nargs='*')
@@ -96,3 +96,6 @@ if __name__ == '__main__':
             if player.playlist_pos is None:
                 player.playlist_pos = 0
         player.wait_for_playback()
+
+if __name__ == '__main__':
+    main()
