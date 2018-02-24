@@ -1,7 +1,6 @@
 import mpv
 import argparse
 
-queue = []
 player = mpv.MPV(ytdl=True, input_default_bindings=True, input_terminal=True, terminal=True, video=False)
 
 HELP_COMMANDS = """The following commands are available:
@@ -59,10 +58,12 @@ def handle_command(command):
     base(command)
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser(description='simple queue player for mpv')
+    parser = argparse.ArgumentParser(description='simple queue player for mpv')
+
+    parser.add_argument('files', metavar="url/paths", default=None, nargs='*')
     # parser.add_argument('--no-video', action='store_true')
 
-    # args = parser.parse_args()
+    args = parser.parse_args()
     
     @player.on_key_press('a')
     def ask_url():
@@ -82,7 +83,12 @@ if __name__ == '__main__':
         """Print playlist when current title changes"""
         print_playlist()
 
-    ask_url()
+    if len(args.files) > 0:
+        for f in args.files:
+            player.playlist_append(f)
+    else:
+        ask_url()
+
     while True:
         if len(player.playlist) > 0:
             if player.playlist_pos is None:
