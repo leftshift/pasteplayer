@@ -16,6 +16,7 @@ default_properties = {
     "osc": True,
     "terminal": True,
     "video": False,
+    "loop-playlist": "no"
 }
 
 def print_playlist():
