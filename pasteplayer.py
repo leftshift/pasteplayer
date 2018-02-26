@@ -3,12 +3,19 @@
 import mpv
 import argparse
 
-player = mpv.MPV(ytdl=True, input_default_bindings=True, input_terminal=True, terminal=True, video=False)
-
 HELP_COMMANDS = """The following commands are available:
     'r POSITION' to remove item from the playlist
     'm POSITION NEW_POSITION' to move item
 """
+
+default_properties = {
+    "ytdl": True,
+    "input_default_bindings": True,
+    "input_terminal": True,
+    "input_vo_keyboard": True,
+    "terminal": True,
+    "video": False,
+}
 
 def print_playlist():
     for n, item in enumerate(player.playlist):
@@ -60,12 +67,20 @@ def handle_command(command):
     base(command)
 
 def main():
+    global player
     parser = argparse.ArgumentParser(description='simple queue player for mpv')
 
-    parser.add_argument('files', metavar="url/paths", default=None, nargs='*')
-    # parser.add_argument('--no-video', action='store_true')
+    parser.add_argument('files', metavar="URL/PATH", default=None, nargs='*')
+    parser.add_argument('-p', '--property', metavar=("KEY", "VALUE"), nargs=2, default=[], action='append',
+                        help="set mpv property KEY to VALUE. See all available properties with 'mpv --list-properties'")
 
     args = parser.parse_args()
+
+    props = default_properties
+    custom_props = {p[0]: p[1] for p in args.property}
+    props.update(custom_props)  # override/add properties from arguments
+
+    player = mpv.MPV(**props)
     
     @player.on_key_press('a')
     def ask_url():
