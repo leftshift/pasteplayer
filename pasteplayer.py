@@ -13,6 +13,7 @@ default_properties = {
     "input_default_bindings": True,
     "input_terminal": True,
     "input_vo_keyboard": True,
+    "osc": True,
     "terminal": True,
     "video": False,
 }
