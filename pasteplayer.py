@@ -10,6 +10,7 @@ HELP_COMMANDS = """The following commands are available:
 """
 
 default_properties = {
+    "config": True,
     "ytdl": True,
     "input_default_bindings": True,
     "input_terminal": True,
