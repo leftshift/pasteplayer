@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import mpv
 import argparse
 
@@ -22,10 +23,12 @@ default_properties = {
 def print_playlist():
     for n, item in enumerate(player.playlist):
         play_status = lambda item : "*" if item.get('current') else ""
+        display_name = lambda item: item.get('title') if 'title' in item else item.get('filename')
+
         print("{:<2}{:>2}. {}".format(
             play_status(item),
             n+1,
-            item.get('filename')
+            display_name(item)
         ))
 
 def prompt(text, callback):
@@ -75,12 +78,16 @@ def main():
     parser.add_argument('files', metavar="URL/PATH", default=None, nargs='*')
     parser.add_argument('-p', '--property', metavar=("KEY", "VALUE"), nargs=2, default=[], action='append',
                         help="set mpv property KEY to VALUE. See all available properties with 'mpv --list-properties'")
+    parser.add_argument('-v', '--video', action='store_true', help="Enable video. Shorthand for '-p video auto'")
 
     args = parser.parse_args()
 
     props = default_properties
     custom_props = {p[0]: p[1] for p in args.property}
     props.update(custom_props)  # override/add properties from arguments
+    
+    if args.video:
+        props['video'] = "auto"
 
     player = mpv.MPV(**props)
     
@@ -96,6 +103,13 @@ def main():
     def ask_command():
         """Open playlist editing command prompt"""
         prompt("Enter command (or 'h' for help)", handle_command)
+
+    @player.on_key_press('q')
+    def terminate():
+        print("terminating")
+        player.terminal = False
+        player.terminate()
+        sys.exit(0)
 
     @player.property_observer('playlist-pos')
     def position_observer(_name, value):
