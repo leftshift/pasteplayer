@@ -35,6 +35,7 @@ optional arguments:
   -p KEY VALUE, --property KEY VALUE
                         set mpv property KEY to VALUE. See all available
                         properties with 'mpv --list-properties'
+  -v, --video           Enable video. Shorthand for '-p video auto'
 ```
 
 ### Potentially useful properties
