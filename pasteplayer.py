@@ -112,13 +112,6 @@ def main():
 
         prompt("Enter command (or 'h' for help)", handle_command)
 
-    @player.on_key_press('q')
-    def terminate():
-        print("terminating")
-        player.terminal = False
-        player.terminate()
-        sys.exit(0)
-
     @player.property_observer('playlist-pos')
     def position_observer(_name, value):
         """Print playlist when current title changes"""
@@ -130,11 +123,9 @@ def main():
     else:
         ask_url()
 
-    while True:
-        if len(player.playlist) > 0:
-            if player.playlist_pos is None:
-                player.playlist_pos = 0
-        player.wait_for_playback()
+    # slightly ugly; but makes sure this thread terminates when mpv terminates
+    # there probably is a better way to do this.
+    player._event_thread.join()
 
 if __name__ == '__main__':
     main()
