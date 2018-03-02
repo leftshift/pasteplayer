@@ -75,7 +75,6 @@ def handle_command(command):
 def main():
     global player
     parser = argparse.ArgumentParser(description='simple queue player for mpv')
-
     parser.add_argument('files', metavar="URL/PATH", default=None, nargs='*')
     parser.add_argument('-p', '--property', metavar=("KEY", "VALUE"), nargs=2, default=[], action='append',
                         help="set mpv property KEY to VALUE. See all available properties with 'mpv --list-properties'")
@@ -84,17 +83,23 @@ def main():
     args = parser.parse_args()
 
     props = default_properties
+
+    # assemble dict from properties from command line
     custom_props = {p[0]: p[1] for p in args.property}
-    props.update(custom_props)  # override/add properties from arguments
-    
+
+    # override/add properties from arguments
+    props.update(custom_props) 
+
     if args.video:
         props['video'] = "auto"
 
     player = mpv.MPV(**props)
-    
+
+
     @player.on_key_press('a')
     def ask_url():
         """Ask for filename/URL to append to the playlist"""
+
         def cb(url):
             if url != "":
                 player.playlist_append(url)
@@ -102,7 +107,9 @@ def main():
 
     @player.on_key_press('c')
     def ask_command():
-        """Open playlist editing command prompt"""
+        """Open playlist editing command prompt.
+        Available commands listed in HELP_COMMANDS"""
+
         prompt("Enter command (or 'h' for help)", handle_command)
 
     @player.on_key_press('q')
