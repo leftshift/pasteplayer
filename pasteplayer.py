@@ -4,6 +4,11 @@ import sys
 import mpv
 import argparse
 
+HELP_WELCOME = """Welcome to pasteplayer!
+Press `a` to append a new item to the playlist.
+Press `c` to open the command prompt.
+"""
+
 HELP_COMMANDS = """The following commands are available:
     'r POSITION' to remove item from the playlist
     'm POSITION NEW_POSITION' to move item
@@ -39,11 +44,14 @@ def prompt(text, callback):
     print_playlist()
     player.terminal = True
     
+def greet():
+    print(HELP_WELCOME)
+
 def handle_command(command):
     """Crude command parser"""
     def base(text):
         """Base parser dispatching to subparsers for each command"""
-        if text.strip() == "h":
+        if text.strip() == "h" or text.strip() == "help":
             print(HELP_COMMANDS)
         if text.startswith("m "):
             move(text[2:])
@@ -125,6 +133,7 @@ def main():
 
         print_playlist()
 
+    greet()
 
     if len(args.files) > 0:
         for f in args.files:
