@@ -10,6 +10,7 @@ Press `c` to open the command prompt.
 """
 
 HELP_COMMANDS = """The following commands are available:
+    'j POSITION' to skip to given item
     'r POSITION' to remove item from the playlist
     'm POSITION NEW_POSITION' to move item
 """
@@ -57,6 +58,17 @@ def handle_command(command):
             move(text[2:])
         if text.startswith("r "):
             remove(text[2:])
+        if text.startswith("j "):
+            jump(text[2:])
+
+    def jump(text):
+        try:
+            n = int(text.strip())
+            player.playlist_pos = n-1
+        except ValueError:
+            print("please enter valid number")
+        except TypeError:
+            print("please enter a valid index")
 
     def remove(text):
         try:
