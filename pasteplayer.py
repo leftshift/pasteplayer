@@ -44,7 +44,19 @@ def prompt(text, callback):
     callback(res)
     print_playlist()
     player.terminal = True
-    
+
+def start_playback(initial=False):
+    """Checks if there are items in the playlist and playback hasn't been started.
+    If initial is set, it will start with the first title, else, we presume just one title has been added to the end."""
+    if len(player.playlist) > 0:
+        if player.playlist_pos is None:
+            # when adding a title to an empty playlist, mpv doesn't automatically start playback,
+            # this does the job.
+            if initial:
+                player.playlist_pos = 0
+            else:
+                player.playlist_pos = len(player.playlist) - 1
+
 def greet():
     print(HELP_WELCOME)
 
@@ -123,6 +135,7 @@ def main():
         def cb(url):
             if url != "":
                 player.playlist_append(url)
+                start_playback()
         prompt("Enter URL or file name", cb)
 
     @player.on_key_press('c')
@@ -132,26 +145,23 @@ def main():
 
         prompt("Enter command (or 'h' for help)", handle_command)
 
-    @player.property_observer('playlist')
-    def playlist_observer(_name, value):
-        """Make sure playlist_pos is set, display playlist.
-        Gets called if items in playlist or position in playlist changes."""
-
-        if len(player.playlist) > 0:
-            if player.playlist_pos is None:
-                # when adding a title to an empty playlist, mpv doesn't automatically start playback,
-                # this does the job.
-                player.playlist_pos = 0
-
+    @player.property_observer('playlist_pos')
+    def playlist_pos_observer(_name, value):
+        """Display playlist on track change"""
         print_playlist()
+
 
     greet()
 
     if len(args.files) > 0:
         for f in args.files:
             player.playlist_append(f)
+
+        print_playlist()
     else:
         ask_url()
+
+    start_playback(initial=True)
 
     # slightly ugly; but makes sure this thread terminates when mpv terminates
     # there probably is a better way to do this.
